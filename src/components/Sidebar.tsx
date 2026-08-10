@@ -540,29 +540,27 @@ const Sidebar = ({
                         setSelectedDate(format(date, "yyyy-MM-dd"));
                       }
                     }}
-                    classNames={{
-                      root: "text-xs",
-                      months: "w-full",
-                      month: "w-full",
-                      month_caption:
-                        "flex justify-center items-center gap-2 py-1 font-bold text-sm",
-                      nav: "flex gap-1",
-                      button_previous: "p-1 rounded hover:bg-gray-200",
-                      button_next: "p-1 rounded hover:bg-gray-200",
-                      weekdays: "flex",
-                      weekday:
-                        "w-8 text-center text-[10px] font-medium opacity-60",
-                      week: "flex",
-                      day: "w-8 h-8 text-center text-xs",
-                      day_button:
-                        "w-8 h-8 rounded-md hover:bg-gray-200 transition",
-                      selected: isDark
-                        ? "bg-gray-100 text-gray-900 font-bold"
-                        : "bg-gray-900 text-white font-bold",
-                      today: "font-bold underline",
-                      outside: "opacity-30",
-                      chevron: isDark ? "fill-gray-300" : "fill-gray-600",
-                    }}
+classNames={{
+  root: "text-xs",
+  months: "w-full",
+  month: "w-full",
+  month_caption:
+    "flex justify-center items-center gap-2 py-1 font-bold text-sm",
+  nav: "flex gap-0.5",
+  button_previous: "p-0.5 rounded hover:bg-gray-200 scale-75",
+  button_next: "p-0.5 rounded hover:bg-gray-200 scale-75",
+  weekdays: "flex",
+  weekday: "w-8 text-center text-[10px] font-medium opacity-60",
+  week: "flex",
+  day: "w-8 h-8 text-center text-xs",
+  day_button: "w-8 h-8 rounded-md hover:bg-gray-200 transition",
+  selected: isDark
+    ? "bg-gray-100 text-gray-900 font-bold"
+    : "bg-gray-900 text-white font-bold",
+  today: "font-bold underline",
+  outside: "opacity-30",
+  chevron: isDark ? "fill-gray-300" : "fill-gray-600",
+}}
                   />
                 </div>
 
