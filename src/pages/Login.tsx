@@ -32,8 +32,33 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 w-full max-w-md">
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+              fill="none"
+              className="w-12 h-12"
+            >
+              <rect
+                x="5"
+                y="6"
+                width="22"
+                height="20"
+                rx="3"
+                stroke="#111111"
+                strokeWidth="2.2"
+              />
+              <g transform="rotate(-40 16 16)">
+                <rect x="14.2" y="8" width="3.6" height="14" rx="1" fill="#111111" />
+                <path d="M14.2 22 L16 26 L17.8 22 Z" fill="#111111" />
+                <rect x="14.2" y="8" width="3.6" height="2.5" rx="0.6" fill="#555555" />
+              </g>
+            </svg>
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Slate</h1>
-          <p className="text-sm text-gray-500 mt-2 font-medium">Sign in to your account</p>
+          <p className="text-sm text-gray-500 mt-2 font-medium">
+            Sign in to your account
+          </p>
         </div>
 
         {error && (
@@ -44,7 +69,9 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">Email</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -55,7 +82,9 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">Password</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              Password
+            </label>
             <input
               type="password"
               value={password}
