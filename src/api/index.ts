@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://slate-backend-0aky.onrender.com/api",
 });
 
 // Request ke saath token automatically bhejne ke liye
