@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import API from "../api";
 import { exportToBlob, exportToSvg } from "@excalidraw/excalidraw";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+import { format } from "date-fns";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
 import {
   ChevronLeft,
@@ -58,7 +61,6 @@ const Sidebar = ({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
 
-  // ========== NOTES ==========
   const fetchNotes = async () => {
     try {
       const { data } = await API.get("/notes");
@@ -108,7 +110,6 @@ const Sidebar = ({
     }
   };
 
-  // ========== DIARY ==========
   const fetchDiaries = async () => {
     try {
       const { data } = await API.get("/diaries");
@@ -171,7 +172,6 @@ const Sidebar = ({
     }
   }, [mode]);
 
-  // ========== THEME ==========
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -182,7 +182,6 @@ const Sidebar = ({
     }
   };
 
-  // ========== BACKGROUND ==========
   const changeBackground = (color: string) => {
     if (excalidrawAPI) {
       excalidrawAPI.updateScene({
@@ -191,7 +190,6 @@ const Sidebar = ({
     }
   };
 
-  // ========== EXPORT ==========
   const handleExportPNG = async () => {
     if (!excalidrawAPI) return;
     const blob = await exportToBlob({
@@ -225,6 +223,9 @@ const Sidebar = ({
 
   const today = new Date().toISOString().split("T")[0];
   const isDark = theme === "dark";
+  const selectedDateObj = selectedDate
+    ? new Date(selectedDate + "T00:00:00")
+    : undefined;
 
   return (
     <div
@@ -235,17 +236,27 @@ const Sidebar = ({
       }`}
     >
       {/* Header */}
-      <div className={`px-5 pt-5 pb-5 flex items-start justify-between ${isDark ? "border-b border-gray-800" : "border-b border-gray-100"}`}>
+      <div
+        className={`px-5 pt-5 pb-5 flex items-start justify-between ${
+          isDark ? "border-b border-gray-800" : "border-b border-gray-100"
+        }`}
+      >
         <div>
           <h1 className="text-lg font-bold tracking-tight">Slate</h1>
-          <p className={`text-xs mt-1.5 font-medium ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          <p
+            className={`text-xs mt-1.5 font-medium ${
+              isDark ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             {user?.name}
           </p>
         </div>
         <button
           onClick={onClose}
           className={`w-8 h-8 flex items-center justify-center rounded-md transition ${
-            isDark ? "hover:bg-gray-800 text-gray-300" : "hover:bg-gray-100 text-gray-600"
+            isDark
+              ? "hover:bg-gray-800 text-gray-300"
+              : "hover:bg-gray-100 text-gray-600"
           }`}
           title="Hide Sidebar"
         >
@@ -255,7 +266,11 @@ const Sidebar = ({
 
       {/* Mode Tabs */}
       <div className="px-4 pt-4">
-        <div className={`flex p-1 rounded-xl ${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+        <div
+          className={`flex p-1 rounded-xl ${
+            isDark ? "bg-gray-800" : "bg-gray-100"
+          }`}
+        >
           <button
             onClick={() => {
               setMode("notes");
@@ -299,7 +314,7 @@ const Sidebar = ({
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {/* ================= NOTES ================= */}
+        {/* NOTES */}
         {mode === "notes" && (
           <>
             <div className="mb-4 space-y-2">
@@ -331,7 +346,11 @@ const Sidebar = ({
 
             <div className="space-y-0.5">
               {notes.length === 0 && (
-                <p className={`text-center text-sm py-8 font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+                <p
+                  className={`text-center text-sm py-8 font-medium ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
                   No notes yet
                 </p>
               )}
@@ -393,7 +412,7 @@ const Sidebar = ({
           </>
         )}
 
-        {/* ================= DIARY ================= */}
+        {/* DIARY */}
         {mode === "diary" && (
           <>
             <div className="mb-4 space-y-2">
@@ -425,7 +444,11 @@ const Sidebar = ({
 
             <div className="space-y-0.5 mb-4">
               {diaries.length === 0 && (
-                <p className={`text-center text-sm py-8 font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+                <p
+                  className={`text-center text-sm py-8 font-medium ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
                   No diaries yet
                 </p>
               )}
@@ -489,24 +512,66 @@ const Sidebar = ({
             </div>
 
             {selectedId && (
-              <div className={`pt-3 border-t ${isDark ? "border-gray-800" : "border-gray-100"}`}>
-                <p className={`text-xs mb-2 font-bold ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+              <div
+                className={`pt-3 border-t ${
+                  isDark ? "border-gray-800" : "border-gray-100"
+                }`}
+              >
+                <p
+                  className={`text-xs mb-2 font-bold ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   Select Date
                 </p>
-                <input
-                  type="date"
-                  value={selectedDate || ""}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className={`w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-gray-400 ${
+
+                <div
+                  className={`rounded-xl border p-1 ${
                     isDark
-                      ? "bg-gray-800 border-gray-700 text-white"
-                      : "bg-gray-50 border-gray-200"
+                      ? "border-gray-700 bg-gray-800"
+                      : "border-gray-200 bg-gray-50"
                   }`}
-                />
+                >
+                  <DayPicker
+                    mode="single"
+                    selected={selectedDateObj}
+                    onSelect={(date) => {
+                      if (date) {
+                        setSelectedDate(format(date, "yyyy-MM-dd"));
+                      }
+                    }}
+                    classNames={{
+                      root: "text-xs",
+                      months: "w-full",
+                      month: "w-full",
+                      month_caption:
+                        "flex justify-center items-center gap-2 py-1 font-bold text-sm",
+                      nav: "flex gap-1",
+                      button_previous: "p-1 rounded hover:bg-gray-200",
+                      button_next: "p-1 rounded hover:bg-gray-200",
+                      weekdays: "flex",
+                      weekday:
+                        "w-8 text-center text-[10px] font-medium opacity-60",
+                      week: "flex",
+                      day: "w-8 h-8 text-center text-xs",
+                      day_button:
+                        "w-8 h-8 rounded-md hover:bg-gray-200 transition",
+                      selected: isDark
+                        ? "bg-gray-100 text-gray-900 font-bold"
+                        : "bg-gray-900 text-white font-bold",
+                      today: "font-bold underline",
+                      outside: "opacity-30",
+                      chevron: isDark ? "fill-gray-300" : "fill-gray-600",
+                    }}
+                  />
+                </div>
+
                 <button
                   onClick={() => setSelectedDate(today)}
                   className={`w-full mt-2 text-sm font-bold ${
-                    isDark ? "text-gray-300 hover:text-white" : "text-gray-700 hover:text-gray-900"
+                    isDark
+                      ? "text-gray-300 hover:text-white"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   Use Today
@@ -518,10 +583,17 @@ const Sidebar = ({
       </div>
 
       {/* Bottom Controls */}
-      <div className={`px-4 py-4 space-y-4 border-t ${isDark ? "border-gray-800" : "border-gray-100"}`}>
-        {/* Theme */}
+      <div
+        className={`px-4 py-4 space-y-4 border-t ${
+          isDark ? "border-gray-800" : "border-gray-100"
+        }`}
+      >
         <div>
-          <p className={`text-xs font-bold mb-1.5 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          <p
+            className={`text-xs font-bold mb-1.5 ${
+              isDark ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             Theme
           </p>
           <button
@@ -537,26 +609,34 @@ const Sidebar = ({
           </button>
         </div>
 
-        {/* Background */}
         <div>
-          <p className={`text-xs font-bold mb-1.5 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          <p
+            className={`text-xs font-bold mb-1.5 ${
+              isDark ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             Background
           </p>
           <div className="flex gap-2">
-            {["#ffffff", "#f8f9fa", "#fff3bf", "#d3f9d8", "#e7f5ff"].map((color) => (
-              <button
-                key={color}
-                onClick={() => changeBackground(color)}
-                className="w-7 h-7 rounded-full border border-gray-300 hover:scale-110 transition shadow-sm"
-                style={{ backgroundColor: color }}
-              />
-            ))}
+            {["#ffffff", "#f8f9fa", "#fff3bf", "#d3f9d8", "#e7f5ff"].map(
+              (color) => (
+                <button
+                  key={color}
+                  onClick={() => changeBackground(color)}
+                  className="w-7 h-7 rounded-full border border-gray-300 hover:scale-110 transition shadow-sm"
+                  style={{ backgroundColor: color }}
+                />
+              )
+            )}
           </div>
         </div>
 
-        {/* Export */}
         <div>
-          <p className={`text-xs font-bold mb-1.5 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          <p
+            className={`text-xs font-bold mb-1.5 ${
+              isDark ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             Export
           </p>
           <div className="flex gap-2">
@@ -585,7 +665,6 @@ const Sidebar = ({
           </div>
         </div>
 
-        {/* Logout */}
         <button
           onClick={logout}
           className="w-full py-2 text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition font-bold flex items-center justify-center gap-2"
