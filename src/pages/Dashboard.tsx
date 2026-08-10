@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PanelLeft } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import ExcalidrawWrapper from "../components/ExcalidrawWrapper";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
@@ -27,10 +28,10 @@ const Dashboard = () => {
       ) : (
 <button
   onClick={() => setSidebarOpen(true)}
-  className="absolute top-20 left-4.5 z-50 w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-300 shadow-sm hover:bg-gray-50 text-gray-800 text-xl font-bold transition"
+  className="absolute top-20 left-4.5 z-50 w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-300 shadow-sm hover:bg-gray-50 text-gray-800 transition"
   title="Show Sidebar"
 >
-  ›
+  <PanelLeft size={18} strokeWidth={2} />
 </button>
       )}
 
